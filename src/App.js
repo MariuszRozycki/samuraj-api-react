@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
+  state = {
+    users: []
+  }
+
+  componentDidMount() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/users', true)
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const users = JSON.parse(xhr.response)
+        this.setState({ users })
+
+      }
+    }
+    xhr.send()
+  }
+
   render() {
+
+    const users = this.state.users.map(user => (
+      <div key={user.id}>
+        <h4>User name: {user.name}</h4>
+        <p>User street: {user.address.street}</p>
+      </div>
+    )
+    );
+
+
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {users}
       </div>
     );
   }
